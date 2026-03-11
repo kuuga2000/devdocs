@@ -1,0 +1,185 @@
+const DEV_DOCS = {
+    project: {
+        name: "Docker DevDocs",
+        description: "Static documentation for Docker commands, suitable for GitHub Pages.",
+    },
+    sections: [
+        {
+            id: "container-lifecycle",
+            title: "Container Lifecycle",
+            summary: "Start, stop, inspect, and remove containers during normal development work.",
+            icon: "container",
+            iconColor: "text-cyan-500",
+            commands: [
+                {
+                    command: "docker ps",
+                    description: "Show running containers.",
+                    example: "docker ps",
+                    tags: ["containers", "list", "running"],
+                },
+                {
+                    command: "docker ps -a",
+                    description: "Show all containers, including stopped ones.",
+                    example: "docker ps -a",
+                    tags: ["containers", "history"],
+                },
+                {
+                    command: "docker run -d --name web nginx",
+                    description: "Create and start a container in detached mode.",
+                    example: "docker run -d --name web -p 8080:80 nginx",
+                    tags: ["run", "start", "detached"],
+                },
+                {
+                    command: "docker stop web",
+                    description: "Gracefully stop a running container.",
+                    example: "docker stop web",
+                    tags: ["stop", "container"],
+                },
+                {
+                    command: "docker start web",
+                    description: "Start a stopped container again.",
+                    example: "docker start web",
+                    tags: ["start", "container"],
+                },
+                {
+                    command: "docker rm web",
+                    description: "Remove a stopped container.",
+                    example: "docker rm web",
+                    tags: ["remove", "cleanup"],
+                },
+            ],
+        },
+        {
+            id: "images",
+            title: "Images",
+            summary: "Build, list, and clean Docker images for local applications.",
+            icon: "layers-3",
+            iconColor: "text-orange-500",
+            commands: [
+                {
+                    command: "docker images",
+                    description: "List locally available images.",
+                    example: "docker images",
+                    tags: ["images", "list"],
+                },
+                {
+                    command: "docker build -t my-app .",
+                    description: "Build an image from the current directory Dockerfile.",
+                    example: "docker build -t my-app:latest .",
+                    tags: ["build", "dockerfile"],
+                },
+                {
+                    command: "docker pull redis",
+                    description: "Download an image from a registry.",
+                    example: "docker pull redis:7",
+                    tags: ["pull", "registry"],
+                },
+                {
+                    command: "docker rmi my-app",
+                    description: "Remove a local image by name or ID.",
+                    example: "docker rmi my-app:latest",
+                    tags: ["remove", "images"],
+                },
+            ],
+        },
+        {
+            id: "logs-and-debugging",
+            title: "Logs and Debugging",
+            summary: "Inspect application output and troubleshoot container behavior.",
+            icon: "bug",
+            iconColor: "text-rose-500",
+            commands: [
+                {
+                    command: "docker logs web",
+                    description: "Print container logs.",
+                    example: "docker logs web",
+                    tags: ["logs", "debug"],
+                },
+                {
+                    command: "docker logs -f web",
+                    description: "Follow logs in real time.",
+                    example: "docker logs -f web",
+                    tags: ["logs", "follow"],
+                },
+                {
+                    command: "docker exec -it web sh",
+                    description: "Open an interactive shell inside a container.",
+                    example: "docker exec -it web sh",
+                    tags: ["exec", "shell", "debug"],
+                },
+                {
+                    command: "docker inspect web",
+                    description: "Show detailed JSON metadata for a container.",
+                    example: "docker inspect web",
+                    tags: ["inspect", "json", "metadata"],
+                },
+            ],
+        },
+        {
+            id: "networks-and-volumes",
+            title: "Networks and Volumes",
+            summary: "Persist data and connect services across containers.",
+            icon: "workflow",
+            iconColor: "text-blue-500",
+            commands: [
+                {
+                    command: "docker volume ls",
+                    description: "List Docker volumes.",
+                    example: "docker volume ls",
+                    tags: ["volume", "storage"],
+                },
+                {
+                    command: "docker volume create app-data",
+                    description: "Create a named volume for persistent data.",
+                    example: "docker volume create app-data",
+                    tags: ["volume", "create"],
+                },
+                {
+                    command: "docker network ls",
+                    description: "List Docker networks.",
+                    example: "docker network ls",
+                    tags: ["network", "list"],
+                },
+                {
+                    command: "docker run -d --name api --network app-net my-api",
+                    description: "Run a container attached to a custom network.",
+                    example: "docker run -d --name api --network app-net my-api",
+                    tags: ["network", "connect"],
+                },
+            ],
+        },
+        {
+            id: "compose",
+            title: "Docker Compose",
+            summary: "Manage multi-container projects with Compose files.",
+            icon: "layout-template",
+            iconColor: "text-emerald-500",
+            commands: [
+                {
+                    command: "docker compose up -d",
+                    description: "Start services from a Compose file in detached mode.",
+                    example: "docker compose up -d",
+                    tags: ["compose", "up"],
+                },
+                {
+                    command: "docker compose down",
+                    description: "Stop and remove services created by Compose.",
+                    example: "docker compose down",
+                    tags: ["compose", "down"],
+                },
+                {
+                    command: "docker compose logs -f",
+                    description: "Stream logs from all Compose services.",
+                    example: "docker compose logs -f",
+                    tags: ["compose", "logs"],
+                },
+                {
+                    command: "docker compose exec app sh",
+                    description: "Run a shell in a service container.",
+                    example: "docker compose exec app sh",
+                    tags: ["compose", "exec"],
+                },
+            ],
+        },
+    ],
+};
