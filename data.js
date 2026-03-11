@@ -856,5 +856,561 @@ const DEV_DOCS = {
                 },
             ],
         },
+        {
+            id: "ssh",
+            title: "SSH",
+            summary: "Useful SSH commands for remote access, key setup, file copy, and remote execution.",
+            icon: "key-round",
+            iconColor: "text-violet-500",
+            groups: [
+                {
+                    title: "Connect",
+                    commands: [
+                        {
+                            command: "ssh user@server",
+                            description: "Connect to a remote server over SSH.",
+                            example: "ssh deploy@example.com",
+                            tags: ["ssh", "remote", "login"],
+                        },
+                        {
+                            command: "ssh -p 2222 user@server",
+                            description: "Connect to a remote server on a custom SSH port.",
+                            example: "ssh -p 2222 deploy@example.com",
+                            tags: ["ssh", "port", "remote"],
+                        },
+                        {
+                            command: "ssh user@server \"pwd && ls\"",
+                            description: "Run a command on a remote server without opening an interactive shell.",
+                            example: "ssh deploy@example.com \"sudo nginx -t\"",
+                            tags: ["ssh", "remote", "command"],
+                        },
+                    ],
+                },
+                {
+                    title: "Keys",
+                    commands: [
+                        {
+                            command: "ssh-keygen -t ed25519 -C \"you@example.com\"",
+                            description: "Generate a modern SSH key pair.",
+                            example: "ssh-keygen -t ed25519 -C \"dev@example.com\"",
+                            tags: ["ssh", "keygen", "keys"],
+                        },
+                        {
+                            command: "ssh-copy-id user@server",
+                            description: "Copy your public key to a server for passwordless login.",
+                            example: "ssh-copy-id deploy@example.com",
+                            tags: ["ssh", "keys", "copy"],
+                        },
+                        {
+                            command: "cat ~/.ssh/id_ed25519.pub",
+                            description: "Show your public SSH key so you can add it to GitHub or a server.",
+                            example: "cat ~/.ssh/id_ed25519.pub",
+                            tags: ["ssh", "keys", "public-key"],
+                        },
+                    ],
+                },
+                {
+                    title: "Copy Files",
+                    commands: [
+                        {
+                            command: "scp file.txt user@server:/path/",
+                            description: "Copy a local file to a remote server.",
+                            example: "scp deploy.sh deploy@example.com:/home/deploy/",
+                            tags: ["ssh", "scp", "copy"],
+                        },
+                        {
+                            command: "scp -r folder/ user@server:/path/",
+                            description: "Copy a local folder recursively to a remote server.",
+                            example: "scp -r ./dist deploy@example.com:/var/www/example.com/",
+                            tags: ["ssh", "scp", "folder"],
+                        },
+                        {
+                            command: "rsync -avz ./folder/ user@server:/path/",
+                            description: "Sync a local folder efficiently to a remote server.",
+                            example: "rsync -avz ./build/ deploy@example.com:/var/www/example.com/",
+                            tags: ["ssh", "rsync", "sync"],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "systemctl",
+            title: "systemctl",
+            summary: "Service management commands for starting, stopping, reloading, enabling, and checking services.",
+            icon: "settings-2",
+            iconColor: "text-zinc-500",
+            groups: [
+                {
+                    title: "Manage Services",
+                    commands: [
+                        {
+                            command: "sudo systemctl start nginx",
+                            description: "Start a service immediately.",
+                            example: "sudo systemctl start nginx",
+                            tags: ["systemctl", "start", "service"],
+                        },
+                        {
+                            command: "sudo systemctl stop nginx",
+                            description: "Stop a running service.",
+                            example: "sudo systemctl stop nginx",
+                            tags: ["systemctl", "stop", "service"],
+                        },
+                        {
+                            command: "sudo systemctl restart nginx",
+                            description: "Restart a service.",
+                            example: "sudo systemctl restart nginx",
+                            tags: ["systemctl", "restart", "service"],
+                        },
+                        {
+                            command: "sudo systemctl reload nginx",
+                            description: "Reload a service configuration without full restart when supported.",
+                            example: "sudo systemctl reload nginx",
+                            tags: ["systemctl", "reload", "service"],
+                        },
+                    ],
+                },
+                {
+                    title: "Status and Boot",
+                    commands: [
+                        {
+                            command: "sudo systemctl status nginx",
+                            description: "Check the current status of a service.",
+                            example: "sudo systemctl status nginx",
+                            tags: ["systemctl", "status", "service"],
+                        },
+                        {
+                            command: "sudo systemctl enable nginx",
+                            description: "Enable a service to start automatically at boot.",
+                            example: "sudo systemctl enable nginx",
+                            tags: ["systemctl", "enable", "boot"],
+                        },
+                        {
+                            command: "sudo systemctl disable nginx",
+                            description: "Disable automatic startup for a service.",
+                            example: "sudo systemctl disable nginx",
+                            tags: ["systemctl", "disable", "boot"],
+                        },
+                        {
+                            command: "systemctl list-units --type=service",
+                            description: "List loaded service units.",
+                            example: "systemctl list-units --type=service",
+                            tags: ["systemctl", "list", "services"],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "journalctl",
+            title: "journalctl",
+            summary: "Useful journalctl commands for checking service logs, filtering output, and following logs live.",
+            icon: "scroll-text",
+            iconColor: "text-amber-500",
+            groups: [
+                {
+                    title: "Service Logs",
+                    commands: [
+                        {
+                            command: "sudo journalctl -u nginx.service",
+                            description: "Show logs for a specific service unit.",
+                            example: "sudo journalctl -u nginx.service",
+                            tags: ["journalctl", "logs", "service"],
+                        },
+                        {
+                            command: "sudo journalctl -xeu nginx.service",
+                            description: "Show detailed recent logs and errors for a service.",
+                            example: "sudo journalctl -xeu nginx.service",
+                            tags: ["journalctl", "errors", "service"],
+                        },
+                        {
+                            command: "sudo journalctl -fu nginx.service",
+                            description: "Follow service logs in real time.",
+                            example: "sudo journalctl -fu nginx.service",
+                            tags: ["journalctl", "follow", "service"],
+                        },
+                    ],
+                },
+                {
+                    title: "Time Filters",
+                    commands: [
+                        {
+                            command: "sudo journalctl --since today",
+                            description: "Show logs since the start of today.",
+                            example: "sudo journalctl --since today",
+                            tags: ["journalctl", "today", "time"],
+                        },
+                        {
+                            command: "sudo journalctl --since \"1 hour ago\"",
+                            description: "Show logs from the last hour.",
+                            example: "sudo journalctl --since \"1 hour ago\"",
+                            tags: ["journalctl", "time", "recent"],
+                        },
+                        {
+                            command: "sudo journalctl -p err -b",
+                            description: "Show boot logs filtered to error priority only.",
+                            example: "sudo journalctl -p err -b",
+                            tags: ["journalctl", "boot", "errors"],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "curl",
+            title: "curl / wget",
+            summary: "Useful commands for downloading files, testing APIs, sending JSON, and inspecting HTTP responses.",
+            icon: "globe",
+            iconColor: "text-cyan-600",
+            groups: [
+                {
+                    title: "Download Files",
+                    commands: [
+                        {
+                            command: "curl -O https://example.com/file.zip",
+                            description: "Download a file and keep its original name.",
+                            example: "curl -O https://example.com/file.zip",
+                            tags: ["curl", "download", "file"],
+                        },
+                        {
+                            command: "wget https://example.com/file.zip",
+                            description: "Download a file using wget.",
+                            example: "wget https://example.com/file.zip",
+                            tags: ["wget", "download", "file"],
+                        },
+                        {
+                            command: "curl -L -o app.tar.gz https://example.com/archive.tar.gz",
+                            description: "Follow redirects and save a file with a custom name.",
+                            example: "curl -L -o app.tar.gz https://example.com/archive.tar.gz",
+                            tags: ["curl", "redirect", "download"],
+                        },
+                    ],
+                },
+                {
+                    title: "Test APIs",
+                    commands: [
+                        {
+                            command: "curl https://api.example.com/users",
+                            description: "Send a simple GET request to an API endpoint.",
+                            example: "curl https://api.example.com/users",
+                            tags: ["curl", "api", "get"],
+                        },
+                        {
+                            command: "curl -I https://example.com",
+                            description: "Fetch only the HTTP response headers.",
+                            example: "curl -I https://example.com",
+                            tags: ["curl", "headers", "http"],
+                        },
+                        {
+                            command: "curl -X POST https://api.example.com/users -H \"Content-Type: application/json\" -d '{\"name\":\"John\"}'",
+                            description: "Send JSON data in a POST request.",
+                            example: "curl -X POST https://api.example.com/users -H \"Content-Type: application/json\" -d '{\"name\":\"John\"}'",
+                            tags: ["curl", "api", "post", "json"],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "certbot-ssl",
+            title: "Certbot / SSL",
+            summary: "Commands for installing Certbot, issuing HTTPS certificates, and renewing SSL for Nginx sites.",
+            icon: "shield-check",
+            iconColor: "text-green-600",
+            groups: [
+                {
+                    title: "Install and Issue",
+                    commands: [
+                        {
+                            command: "sudo apt install certbot python3-certbot-nginx -y",
+                            description: "Install Certbot and the Nginx plugin on Ubuntu or Debian.",
+                            example: "sudo apt install certbot python3-certbot-nginx -y",
+                            tags: ["certbot", "ssl", "install", "nginx"],
+                        },
+                        {
+                            command: "sudo certbot --nginx -d example.com -d www.example.com",
+                            description: "Request and configure an HTTPS certificate for an Nginx site.",
+                            example: "sudo certbot --nginx -d example.com -d www.example.com",
+                            tags: ["certbot", "ssl", "https", "nginx"],
+                        },
+                        {
+                            command: "sudo certbot certificates",
+                            description: "List installed certificates and their expiration details.",
+                            example: "sudo certbot certificates",
+                            tags: ["certbot", "certificates", "ssl"],
+                        },
+                    ],
+                },
+                {
+                    title: "Renew and Test",
+                    commands: [
+                        {
+                            command: "sudo certbot renew --dry-run",
+                            description: "Test certificate renewal without making real changes.",
+                            example: "sudo certbot renew --dry-run",
+                            tags: ["certbot", "renew", "test"],
+                        },
+                        {
+                            command: "sudo certbot renew",
+                            description: "Renew certificates that are close to expiring.",
+                            example: "sudo certbot renew",
+                            tags: ["certbot", "renew", "ssl"],
+                        },
+                        {
+                            command: "sudo nginx -t && sudo systemctl reload nginx",
+                            description: "Validate and reload Nginx after SSL configuration changes.",
+                            example: "sudo nginx -t && sudo systemctl reload nginx",
+                            tags: ["certbot", "nginx", "reload"],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "pm2",
+            title: "PM2",
+            summary: "Commands for running Node.js applications in the background, managing processes, and checking logs.",
+            icon: "activity",
+            iconColor: "text-fuchsia-500",
+            groups: [
+                {
+                    title: "Run Apps",
+                    commands: [
+                        {
+                            command: "pm2 start app.js --name my-app",
+                            description: "Start a Node.js app in PM2 with a process name.",
+                            example: "pm2 start server.js --name my-app",
+                            tags: ["pm2", "start", "node"],
+                        },
+                        {
+                            command: "pm2 start npm --name my-app -- run start",
+                            description: "Start an npm script through PM2.",
+                            example: "pm2 start npm --name my-app -- run start",
+                            tags: ["pm2", "npm", "start"],
+                        },
+                        {
+                            command: "pm2 start ecosystem.config.js",
+                            description: "Start an app using a PM2 ecosystem config file.",
+                            example: "pm2 start ecosystem.config.js",
+                            tags: ["pm2", "ecosystem", "config"],
+                        },
+                        {
+                            command: "module.exports = { ... }",
+                            description: "Example PM2 ecosystem.config.js for a Node.js application with separate production and development environments.",
+                            exampleBlock: `module.exports = {
+    apps: [
+        {
+            name: "my-app",
+            script: "./server.js",
+            instances: 1,
+            autorestart: true,
+            watch: false,
+            max_memory_restart: "300M",
+            env: {
+                NODE_ENV: "development",
+                PORT: 3000
+            },
+            env_production: {
+                NODE_ENV: "production",
+                PORT: 3000
+            }
+        }
+    ]
+};`,
+                            copyText: `module.exports = {
+    apps: [
+        {
+            name: "my-app",
+            script: "./server.js",
+            instances: 1,
+            autorestart: true,
+            watch: false,
+            max_memory_restart: "300M",
+            env: {
+                NODE_ENV: "development",
+                PORT: 3000
+            },
+            env_production: {
+                NODE_ENV: "production",
+                PORT: 3000
+            }
+        }
+    ]
+};`,
+                            tags: ["pm2", "ecosystem", "config", "example"],
+                        },
+                        {
+                            command: "module.exports = { cluster mode }",
+                            description: "Example PM2 ecosystem.config.js using cluster mode for multi-core production workloads.",
+                            exampleBlock: `module.exports = {
+    apps: [
+        {
+            name: "my-app-cluster",
+            script: "./server.js",
+            exec_mode: "cluster",
+            instances: "max",
+            autorestart: true,
+            watch: false,
+            max_memory_restart: "500M",
+            env_production: {
+                NODE_ENV: "production",
+                PORT: 3000
+            }
+        }
+    ]
+};`,
+                            copyText: `module.exports = {
+    apps: [
+        {
+            name: "my-app-cluster",
+            script: "./server.js",
+            exec_mode: "cluster",
+            instances: "max",
+            autorestart: true,
+            watch: false,
+            max_memory_restart: "500M",
+            env_production: {
+                NODE_ENV: "production",
+                PORT: 3000
+            }
+        }
+    ]
+};`,
+                            tags: ["pm2", "cluster", "config", "example"],
+                        },
+                        {
+                            command: "module.exports = { Next.js }",
+                            description: "Example PM2 ecosystem.config.js for a Next.js production server.",
+                            exampleBlock: `module.exports = {
+    apps: [
+        {
+            name: "next-app",
+            script: "node_modules/next/dist/bin/next",
+            args: "start -p 3000",
+            cwd: "/var/www/next-app",
+            instances: 1,
+            autorestart: true,
+            watch: false,
+            env_production: {
+                NODE_ENV: "production",
+                PORT: 3000
+            }
+        }
+    ]
+};`,
+                            copyText: `module.exports = {
+    apps: [
+        {
+            name: "next-app",
+            script: "node_modules/next/dist/bin/next",
+            args: "start -p 3000",
+            cwd: "/var/www/next-app",
+            instances: 1,
+            autorestart: true,
+            watch: false,
+            env_production: {
+                NODE_ENV: "production",
+                PORT: 3000
+            }
+        }
+    ]
+};`,
+                            tags: ["pm2", "nextjs", "config", "example"],
+                        },
+                        {
+                            command: "module.exports = { NestJS }",
+                            description: "Example PM2 ecosystem.config.js for a NestJS app running the compiled dist entrypoint.",
+                            exampleBlock: `module.exports = {
+    apps: [
+        {
+            name: "nestjs-app",
+            script: "dist/main.js",
+            cwd: "/var/www/nestjs-app",
+            instances: 1,
+            autorestart: true,
+            watch: false,
+            max_memory_restart: "400M",
+            env_production: {
+                NODE_ENV: "production",
+                PORT: 3000
+            }
+        }
+    ]
+};`,
+                            copyText: `module.exports = {
+    apps: [
+        {
+            name: "nestjs-app",
+            script: "dist/main.js",
+            cwd: "/var/www/nestjs-app",
+            instances: 1,
+            autorestart: true,
+            watch: false,
+            max_memory_restart: "400M",
+            env_production: {
+                NODE_ENV: "production",
+                PORT: 3000
+            }
+        }
+    ]
+};`,
+                            tags: ["pm2", "nestjs", "config", "example"],
+                        },
+                    ],
+                },
+                {
+                    title: "Manage Processes",
+                    commands: [
+                        {
+                            command: "pm2 list",
+                            description: "Show all PM2 managed processes.",
+                            example: "pm2 list",
+                            tags: ["pm2", "list", "processes"],
+                        },
+                        {
+                            command: "pm2 restart my-app",
+                            description: "Restart a PM2 process by name.",
+                            example: "pm2 restart my-app",
+                            tags: ["pm2", "restart", "process"],
+                        },
+                        {
+                            command: "pm2 stop my-app",
+                            description: "Stop a PM2 process without deleting it.",
+                            example: "pm2 stop my-app",
+                            tags: ["pm2", "stop", "process"],
+                        },
+                        {
+                            command: "pm2 delete my-app",
+                            description: "Remove a process from PM2.",
+                            example: "pm2 delete my-app",
+                            tags: ["pm2", "delete", "process"],
+                        },
+                    ],
+                },
+                {
+                    title: "Logs and Startup",
+                    commands: [
+                        {
+                            command: "pm2 logs my-app",
+                            description: "View live logs for a PM2 process.",
+                            example: "pm2 logs my-app",
+                            tags: ["pm2", "logs", "process"],
+                        },
+                        {
+                            command: "pm2 save",
+                            description: "Save the current PM2 process list for resurrection on reboot.",
+                            example: "pm2 save",
+                            tags: ["pm2", "save", "startup"],
+                        },
+                        {
+                            command: "pm2 startup",
+                            description: "Generate and configure startup scripts for PM2.",
+                            example: "pm2 startup",
+                            tags: ["pm2", "startup", "boot"],
+                        },
+                    ],
+                },
+            ],
+        },
     ],
 };
