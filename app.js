@@ -30,6 +30,14 @@ function copyToClipboard(text, btn) {
     }, 2000);
 }
 
+function getSectionCommands(section) {
+    if (section.groups) {
+        return section.groups.flatMap((group) => group.commands);
+    }
+
+    return section.commands || [];
+}
+
 function createNav(sections) {
     sidebarNav.innerHTML = "";
 
@@ -77,9 +85,26 @@ function createSection(section) {
         <p class="text-sm text-slate-500 mb-4">${escapeHtml(section.summary)}</p>
     `;
 
+    if (section.groups) {
+        section.groups.forEach((group) => {
+            const groupWrap = document.createElement("div");
+            groupWrap.className = "mb-8 last:mb-0";
+            groupWrap.innerHTML = `
+                <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">${escapeHtml(group.title)}</h3>
+            `;
+
+            const grid = document.createElement("div");
+            grid.className = "grid md:grid-cols-2 gap-4";
+            group.commands.forEach((command) => grid.appendChild(createCard(command)));
+            groupWrap.appendChild(grid);
+            sectionEl.appendChild(groupWrap);
+        });
+        return sectionEl;
+    }
+
     const grid = document.createElement("div");
     grid.className = "grid md:grid-cols-2 gap-4";
-    section.commands.forEach((command) => grid.appendChild(createCard(command)));
+    getSectionCommands(section).forEach((command) => grid.appendChild(createCard(command)));
     sectionEl.appendChild(grid);
     return sectionEl;
 }
@@ -102,22 +127,50 @@ function filterSections(term) {
     }
 
     const filteredSections = DEV_DOCS.sections
-        .map((section) => ({
-            ...section,
-            commands: section.commands.filter((command) => {
-                const text = [
-                    section.title,
-                    section.summary,
-                    command.command,
-                    command.description,
-                    command.example || "",
-                    command.tags.join(" "),
-                ].join(" ").toLowerCase();
+        .map((section) => {
+            if (section.groups) {
+                const groups = section.groups
+                    .map((group) => ({
+                        ...group,
+                        commands: group.commands.filter((command) => {
+                            const text = [
+                                section.title,
+                                section.summary,
+                                group.title,
+                                command.command,
+                                command.description,
+                                command.example || "",
+                                command.tags.join(" "),
+                            ].join(" ").toLowerCase();
 
-                return text.includes(keyword);
-            }),
-        }))
-        .filter((section) => section.commands.length > 0);
+                            return text.includes(keyword);
+                        }),
+                    }))
+                    .filter((group) => group.commands.length > 0);
+
+                return {
+                    ...section,
+                    groups,
+                };
+            }
+
+            return {
+                ...section,
+                commands: getSectionCommands(section).filter((command) => {
+                    const text = [
+                        section.title,
+                        section.summary,
+                        command.command,
+                        command.description,
+                        command.example || "",
+                        command.tags.join(" "),
+                    ].join(" ").toLowerCase();
+
+                    return text.includes(keyword);
+                }),
+            };
+        })
+        .filter((section) => getSectionCommands(section).length > 0);
 
     createNav(filteredSections);
     renderSections(filteredSections);
