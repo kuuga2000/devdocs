@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nginx Error Diagnoser</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .terminal {
+            background-color: #0d1117;
+            font-family: 'Courier New', Courier, monospace;
+            color: #e6edf3;
+        }
+        .step-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            transition: all 0.2s;
+        }
+        .step-card:hover {
+            border-color: #58a6ff;
+        }
+    </style>
+</head>
+<body class="bg-[#010409] text-gray-300 min-h-screen p-4 md:p-8">
+    <div class="max-w-4xl mx-auto">
+        <header class="mb-8">
+            <h1 class="text-3xl font-black text-white mb-2 flex items-center gap-3">
+                <span class="bg-emerald-500 text-black px-2 py-1 rounded text-sm uppercase">Nginx</span>
+                Troubleshooter
+            </h1>
+            <p class="text-gray-400">Follow these steps to find out why your service failed to start.</p>
+        </header>
+
+        <div class="grid gap-6">
+            <!-- Step 1: Syntax Check -->
+            <section class="step-card rounded-xl p-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">1</div>
+                    <h2 class="text-xl font-bold text-white">Check Config Syntax</h2>
+                </div>
+                <p class="text-sm mb-4">Most failures are caused by a typo in <code>nginx.conf</code> or site-available files.</p>
+                <div class="terminal p-4 rounded-lg relative group">
+                    <code id="cmd1">sudo nginx -t</code>
+                    <button onclick="copyCmd('cmd1')" class="absolute right-4 top-4 text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded">Copy</button>
+                </div>
+                <div class="mt-4 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded text-xs text-emerald-400">
+                    <strong>Look for:</strong> "syntax is ok" and "test is successful". If it fails, it will tell you exactly which line has the error.
+                </div>
+            </section>
+
+            <!-- Step 2: Port Conflict -->
+            <section class="step-card rounded-xl p-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold">2</div>
+                    <h2 class="text-xl font-bold text-white">Check Port 80/443 Conflict</h2>
+                </div>
+                <p class="text-sm mb-4">Check if another process (like Apache or another Nginx instance) is already using the ports.</p>
+                <div class="terminal p-4 rounded-lg relative group">
+                    <code id="cmd2">sudo ss -tulpn | grep :80</code>
+                    <button onclick="copyCmd('cmd2')" class="absolute right-4 top-4 text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded">Copy</button>
+                </div>
+            </section>
+
+            <!-- Step 3: Journal Logs -->
+            <section class="step-card rounded-xl p-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-8 h-8 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">3</div>
+                    <h2 class="text-xl font-bold text-white">Read Error Logs</h2>
+                </div>
+                <p class="text-sm mb-4">If the syntax is OK, the specific error will be at the bottom of the system log.</p>
+                <div class="terminal p-4 rounded-lg relative group mb-4">
+                    <code id="cmd3">sudo journalctl -xeu nginx.service</code>
+                    <button onclick="copyCmd('cmd3')" class="absolute right-4 top-4 text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded">Copy</button>
+                </div>
+                <div class="terminal p-4 rounded-lg relative group">
+                    <code id="cmd4">sudo tail -n 20 /var/log/nginx/error.log</code>
+                    <button onclick="copyCmd('cmd4')" class="absolute right-4 top-4 text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded">Copy</button>
+                </div>
+            </section>
+
+            <!-- Common Solutions -->
+            <section class="bg-red-500/5 border border-red-500/20 rounded-xl p-6">
+                <h2 class="text-lg font-bold text-red-400 mb-4">Common "Fail to Start" Fixes</h2>
+                <ul class="space-y-4 text-sm">
+                    <li class="flex gap-3">
+                        <span class="text-red-500 font-bold">•</span>
+                        <div>
+                            <span class="font-bold block text-white">Missing Directories:</span>
+                            Nginx fails if a path in <code>access_log</code> or <code>root</code> doesn't exist. Run <code>sudo mkdir -p /path/to/dir</code>.
+                        </div>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="text-red-500 font-bold">•</span>
+                        <div>
+                            <span class="font-bold block text-white">Permission Denied:</span>
+                            Check if Nginx has access to your web root: <code>sudo chown -R www-data:www-data /var/www/html</code>.
+                        </div>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="text-red-500 font-bold">•</span>
+                        <div>
+                            <span class="font-bold block text-white">SELinux (CentOS/RHEL):</span>
+                            If you are on CentOS, SELinux might block Nginx. Try <code>setsebool -P httpd_can_network_connect 1</code>.
+                        </div>
+                    </li>
+                </ul>
+            </section>
+        </div>
+
+        <footer class="mt-12 text-center text-gray-600 text-xs">
+            Nginx Troubleshooting Dashboard • Generated for System Recovery
+        </footer>
+    </div>
+
+    <script>
+        function copyCmd(id) {
+            const text = document.getElementById(id).innerText;
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.innerText = 'Copied!';
+            btn.classList.add('bg-emerald-600');
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.classList.remove('bg-emerald-600');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
