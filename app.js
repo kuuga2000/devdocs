@@ -2,6 +2,9 @@ const searchInput = document.getElementById("searchInput");
 const sidebarNav = document.getElementById("sidebarNav");
 const commandGrid = document.getElementById("commandGrid");
 const noResults = document.getElementById("noResults");
+const themeToggle = document.getElementById("themeToggle");
+const themeLabel = document.getElementById("themeLabel");
+const root = document.documentElement;
 
 function escapeHtml(value) {
     return String(value)
@@ -60,12 +63,12 @@ function createCard(command) {
         "command-card bg-white border border-slate-200 p-5 rounded-2xl hover:shadow-md transition-shadow relative group";
     card.innerHTML = `
         <div class="flex justify-between items-start mb-3">
-            <code class="bg-slate-100 px-3 py-1 rounded text-blue-700 text-sm font-medium">${escapeHtml(command.command)}</code>
-            <button class="copy-btn opacity-0 p-1.5 hover:bg-slate-100 rounded-md transition-all text-slate-400 hover:text-blue-600" type="button" aria-label="Copy command">
+            <code class="command-code bg-slate-100 px-3 py-1 rounded text-blue-700 text-sm font-medium">${escapeHtml(command.command)}</code>
+            <button class="copy-btn command-copy opacity-0 p-1.5 hover:bg-slate-100 rounded-md transition-all text-slate-400 hover:text-blue-600" type="button" aria-label="Copy command">
                 <i data-lucide="copy" class="w-4 h-4"></i>
             </button>
         </div>
-        <p class="text-sm text-slate-600 leading-relaxed">${escapeHtml(command.description)}</p>
+        <p class="command-description text-sm text-slate-600 leading-relaxed">${escapeHtml(command.description)}</p>
     `;
 
     const button = card.querySelector(".copy-btn");
@@ -78,11 +81,11 @@ function createSection(section) {
     sectionEl.id = section.id;
     sectionEl.className = "category-section scroll-mt-24";
     sectionEl.innerHTML = `
-        <div class="flex items-center gap-2 mb-6 border-b border-slate-200 pb-2">
+        <div class="section-divider flex items-center gap-2 mb-6 border-b border-slate-200 pb-2">
             <i data-lucide="${escapeHtml(section.icon)}" class="w-5 h-5 ${escapeHtml(section.iconColor)}"></i>
-            <h2 class="text-xl font-bold">${escapeHtml(section.title)}</h2>
+            <h2 class="section-title text-xl font-bold">${escapeHtml(section.title)}</h2>
         </div>
-        <p class="text-sm text-slate-500 mb-4">${escapeHtml(section.summary)}</p>
+        <p class="section-summary text-sm text-slate-500 mb-4">${escapeHtml(section.summary)}</p>
     `;
 
     if (section.groups) {
@@ -90,7 +93,7 @@ function createSection(section) {
             const groupWrap = document.createElement("div");
             groupWrap.className = "mb-8 last:mb-0";
             groupWrap.innerHTML = `
-                <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">${escapeHtml(group.title)}</h3>
+                <h3 class="group-title text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4">${escapeHtml(group.title)}</h3>
             `;
 
             const grid = document.createElement("div");
@@ -201,10 +204,25 @@ function setupObserver() {
     sections.forEach((section) => observer.observe(section));
 }
 
+function updateThemeUi() {
+    const isDark = root.classList.contains("dark");
+    themeLabel.textContent = isDark ? "Light" : "Dark";
+    document.getElementById("themeIcon").setAttribute("data-lucide", isDark ? "sun" : "moon");
+    lucide.createIcons();
+}
+
+function toggleTheme() {
+    const isDark = root.classList.toggle("dark");
+    localStorage.setItem("devdocs-theme", isDark ? "dark" : "light");
+    updateThemeUi();
+}
+
 searchInput.addEventListener("input", (event) => {
     filterSections(event.target.value);
 });
 
+themeToggle.addEventListener("click", toggleTheme);
+
 createNav(DEV_DOCS.sections);
 renderSections(DEV_DOCS.sections);
-lucide.createIcons();
+updateThemeUi();
