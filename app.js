@@ -58,9 +58,20 @@ function createNav(sections) {
 }
 
 function createCard(command) {
+    const copyValue = command.copyText || command.exampleBlock || command.command;
+    const exampleBlock = command.exampleBlock
+        ? `
+        <div class="mt-4">
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Example</p>
+            <pre class="bg-slate-950 text-slate-100 text-xs rounded-xl p-4 overflow-x-auto"><code>${escapeHtml(command.exampleBlock)}</code></pre>
+        </div>
+    `
+        : "";
+
     const card = document.createElement("div");
+    const spanClass = command.fullWidth || command.exampleBlock ? "md:col-span-2" : "";
     card.className =
-        "command-card bg-white border border-slate-200 p-5 rounded-2xl hover:shadow-md transition-shadow relative group";
+        `command-card bg-white border border-slate-200 p-5 rounded-2xl hover:shadow-md transition-shadow relative group ${spanClass}`.trim();
     card.innerHTML = `
         <div class="flex justify-between items-start mb-3">
             <code class="command-code bg-slate-100 px-3 py-1 rounded text-blue-700 text-sm font-medium">${escapeHtml(command.command)}</code>
@@ -69,10 +80,11 @@ function createCard(command) {
             </button>
         </div>
         <p class="command-description text-sm text-slate-600 leading-relaxed">${escapeHtml(command.description)}</p>
+        ${exampleBlock}
     `;
 
     const button = card.querySelector(".copy-btn");
-    button.addEventListener("click", () => copyToClipboard(command.command, button));
+    button.addEventListener("click", () => copyToClipboard(copyValue, button));
     return card;
 }
 
@@ -143,6 +155,7 @@ function filterSections(term) {
                                 command.command,
                                 command.description,
                                 command.example || "",
+                                command.exampleBlock || "",
                                 command.tags.join(" "),
                             ].join(" ").toLowerCase();
 
@@ -166,6 +179,7 @@ function filterSections(term) {
                         command.command,
                         command.description,
                         command.example || "",
+                        command.exampleBlock || "",
                         command.tags.join(" "),
                     ].join(" ").toLowerCase();
 
@@ -183,8 +197,8 @@ function setupObserver() {
     const sections = document.querySelectorAll(".category-section");
     const observerOptions = {
         root: null,
-        rootMargin: "0px",
-        threshold: 0.5,
+        rootMargin: "-120px 0px -65% 0px",
+        threshold: 0,
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -222,6 +236,13 @@ searchInput.addEventListener("input", (event) => {
 });
 
 themeToggle.addEventListener("click", toggleTheme);
+
+window.addEventListener("hashchange", () => {
+    const currentHash = window.location.hash;
+    document.querySelectorAll(".nav-link").forEach((link) => {
+        link.classList.toggle("active", link.getAttribute("href") === currentHash);
+    });
+});
 
 createNav(DEV_DOCS.sections);
 renderSections(DEV_DOCS.sections);

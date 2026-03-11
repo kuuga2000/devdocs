@@ -440,6 +440,162 @@ const DEV_DOCS = {
             ],
         },
         {
+            id: "nginx",
+            title: "Nginx",
+            summary: "Clear Nginx commands for creating site configs, enabling them, testing changes, and syncing to a server.",
+            icon: "server",
+            iconColor: "text-emerald-500",
+            groups: [
+                {
+                    title: "Install and Service",
+                    commands: [
+                        {
+                            command: "sudo apt update && sudo apt install nginx -y",
+                            description: "Install Nginx on Ubuntu or Debian.",
+                            example: "sudo apt update && sudo apt install nginx -y",
+                            tags: ["nginx", "install", "ubuntu", "debian"],
+                        },
+                        {
+                            command: "sudo systemctl status nginx",
+                            description: "Check whether the Nginx service is running correctly.",
+                            example: "sudo systemctl status nginx",
+                            tags: ["nginx", "systemctl", "status"],
+                        },
+                        {
+                            command: "sudo systemctl enable nginx",
+                            description: "Start Nginx automatically on server boot.",
+                            example: "sudo systemctl enable nginx",
+                            tags: ["nginx", "enable", "boot"],
+                        },
+                    ],
+                },
+                {
+                    title: "Create Site in sites-available",
+                    commands: [
+                        {
+                            command: "sudo nano /etc/nginx/sites-available/example.com",
+                            description: "Create or edit a virtual host config in sites-available.",
+                            example: "sudo nano /etc/nginx/sites-available/example.com",
+                            tags: ["nginx", "sites-available", "config"],
+                        },
+                        {
+                            command: "sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/example.com",
+                            description: "Copy the default config as a starting point for a new site.",
+                            example: "sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/example.com",
+                            tags: ["nginx", "sites-available", "copy"],
+                        },
+                        {
+                            command: "sudo mkdir -p /var/www/example.com/html",
+                            description: "Create the document root used by the site config.",
+                            example: "sudo mkdir -p /var/www/example.com/html",
+                            tags: ["nginx", "root", "web"],
+                        },
+                        {
+                            command: "server { ... }",
+                            description: "Basic Nginx server block for a static site using a document root in /var/www.",
+                            exampleBlock: `server {
+    listen 80;
+    listen [::]:80;
+    server_name example.com www.example.com;
+
+    root /var/www/example.com/html;
+    index index.html index.htm;
+
+    access_log /var/log/nginx/example.com.access.log;
+    error_log /var/log/nginx/example.com.error.log;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}`,
+                            tags: ["nginx", "server-block", "example", "sites-available"],
+                        },
+                    ],
+                },
+                {
+                    title: "Enable Site and Reload",
+                    commands: [
+                        {
+                            command: "sudo ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/",
+                            description: "Enable a site by symlinking it into sites-enabled.",
+                            example: "sudo ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/",
+                            tags: ["nginx", "sites-enabled", "symlink"],
+                        },
+                        {
+                            command: "sudo nginx -t",
+                            description: "Validate the full Nginx configuration before reload or restart.",
+                            example: "sudo nginx -t",
+                            tags: ["nginx", "test", "validate"],
+                        },
+                        {
+                            command: "sudo systemctl reload nginx",
+                            description: "Reload Nginx after a valid config change without stopping traffic.",
+                            example: "sudo systemctl reload nginx",
+                            tags: ["nginx", "reload", "systemctl"],
+                        },
+                        {
+                            command: "sudo systemctl restart nginx",
+                            description: "Fully restart Nginx when a reload is not enough.",
+                            example: "sudo systemctl restart nginx",
+                            tags: ["nginx", "restart", "systemctl"],
+                        },
+                    ],
+                },
+                {
+                    title: "Disable and Debug",
+                    commands: [
+                        {
+                            command: "sudo rm /etc/nginx/sites-enabled/example.com",
+                            description: "Disable a site by removing its symlink from sites-enabled.",
+                            example: "sudo rm /etc/nginx/sites-enabled/example.com",
+                            tags: ["nginx", "disable", "sites-enabled"],
+                        },
+                        {
+                            command: "sudo journalctl -xeu nginx.service",
+                            description: "Read systemd logs when Nginx fails to start or reload.",
+                            example: "sudo journalctl -xeu nginx.service",
+                            tags: ["nginx", "logs", "systemd"],
+                        },
+                        {
+                            command: "sudo tail -n 50 /var/log/nginx/error.log",
+                            description: "Check recent Nginx error log messages.",
+                            example: "sudo tail -n 50 /var/log/nginx/error.log",
+                            tags: ["nginx", "logs", "error"],
+                        },
+                        {
+                            command: "sudo ss -tulpn | grep :80",
+                            description: "Check whether another process is already using port 80.",
+                            example: "sudo ss -tulpn | grep :80",
+                            tags: ["nginx", "port", "diagnostic"],
+                        },
+                    ],
+                },
+                {
+                    title: "Sync Config to Server",
+                    commands: [
+                        {
+                            command: "rsync -av ./nginx/ deploy@example.com:/etc/nginx/sites-available/",
+                            description: "Sync local Nginx config files to a remote server.",
+                            example: "rsync -av ./nginx/ deploy@example.com:/etc/nginx/sites-available/",
+                            tags: ["nginx", "sync", "rsync"],
+                        },
+                        {
+                            command: "scp ./nginx/example.com deploy@example.com:/etc/nginx/sites-available/example.com",
+                            description: "Copy a single site config to the remote server.",
+                            example: "scp ./nginx/example.com deploy@example.com:/etc/nginx/sites-available/example.com",
+                            tags: ["nginx", "sync", "scp"],
+                        },
+                        {
+                            command: "ssh deploy@example.com \"sudo nginx -t && sudo systemctl reload nginx\"",
+                            description: "Validate and reload Nginx remotely after syncing changes.",
+                            example: "ssh deploy@example.com \"sudo nginx -t && sudo systemctl reload nginx\"",
+                            tags: ["nginx", "sync", "ssh", "reload"],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
             id: "pnpm",
             title: "pnpm",
             summary: "Common pnpm commands for fast installs, workspace scripts, and dependency management.",
@@ -518,6 +674,183 @@ const DEV_DOCS = {
                             description: "Remove a dependency from the project.",
                             example: "pnpm remove react",
                             tags: ["pnpm", "remove", "dependencies"],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "linux-ubuntu",
+            title: "Linux / Ubuntu",
+            summary: "Useful Linux and Ubuntu commands for navigation, file search, text search, permissions, and system checks.",
+            icon: "terminal-square",
+            iconColor: "text-sky-500",
+            groups: [
+                {
+                    title: "Navigation and Listing",
+                    commands: [
+                        {
+                            command: "pwd",
+                            description: "Show the current working directory.",
+                            example: "pwd",
+                            tags: ["linux", "ubuntu", "path", "directory"],
+                        },
+                        {
+                            command: "ls -lah --color=auto",
+                            description: "List files with details, hidden files, and color output.",
+                            example: "ls -lah --color=auto",
+                            tags: ["linux", "ubuntu", "ls", "color"],
+                        },
+                        {
+                            command: "tree -C -L 2",
+                            description: "Show a colored folder tree up to 2 levels deep.",
+                            example: "tree -C -L 2 /var/www",
+                            tags: ["linux", "ubuntu", "tree", "color"],
+                        },
+                        {
+                            command: "cd /path/to/folder",
+                            description: "Move into a specific directory.",
+                            example: "cd /etc/nginx/sites-available",
+                            tags: ["linux", "ubuntu", "cd", "directory"],
+                        },
+                    ],
+                },
+                {
+                    title: "Find File in Specific Folder",
+                    commands: [
+                        {
+                            command: "find /path/to/folder -name \"filename\"",
+                            description: "Find a file by exact name inside a specific folder.",
+                            example: "find /etc/nginx -name \"example.com\"",
+                            tags: ["linux", "ubuntu", "find", "file"],
+                        },
+                        {
+                            command: "find /path/to/folder -iname \"*keyword*\"",
+                            description: "Find files by partial name, case-insensitive, in a specific folder.",
+                            example: "find /var/www -iname \"*index*\"",
+                            tags: ["linux", "ubuntu", "find", "filename"],
+                        },
+                        {
+                            command: "find /path/to/folder -type f",
+                            description: "List only files in a specific folder tree.",
+                            example: "find /etc/nginx -type f",
+                            tags: ["linux", "ubuntu", "find", "files"],
+                        },
+                        {
+                            command: "find /path/to/folder -type d",
+                            description: "List only directories in a specific folder tree.",
+                            example: "find /var/www -type d",
+                            tags: ["linux", "ubuntu", "find", "directories"],
+                        },
+                    ],
+                },
+                {
+                    title: "Find Text in Specific Folder",
+                    commands: [
+                        {
+                            command: "grep -R \"text\" /path/to/folder",
+                            description: "Search for text recursively in all files under a folder.",
+                            example: "grep -R \"server_name\" /etc/nginx",
+                            tags: ["linux", "ubuntu", "grep", "text"],
+                        },
+                        {
+                            command: "grep -Rni \"text\" /path/to/folder",
+                            description: "Search text recursively with line numbers and case-insensitive matching.",
+                            example: "grep -Rni \"listen 80\" /etc/nginx",
+                            tags: ["linux", "ubuntu", "grep", "line-number"],
+                        },
+                        {
+                            command: "rg \"text\" /path/to/folder",
+                            description: "Use ripgrep for faster text search inside a folder.",
+                            example: "rg \"proxy_pass\" /etc/nginx",
+                            tags: ["linux", "ubuntu", "rg", "ripgrep"],
+                        },
+                        {
+                            command: "rg --files /path/to/folder",
+                            description: "List all files under a folder using ripgrep.",
+                            example: "rg --files /etc/nginx",
+                            tags: ["linux", "ubuntu", "rg", "files"],
+                        },
+                    ],
+                },
+                {
+                    title: "File Operations",
+                    commands: [
+                        {
+                            command: "cp source.txt /target/folder/",
+                            description: "Copy a file to another folder.",
+                            example: "cp index.html /var/www/example.com/html/",
+                            tags: ["linux", "ubuntu", "cp", "copy"],
+                        },
+                        {
+                            command: "mv oldname.txt newname.txt",
+                            description: "Rename or move a file.",
+                            example: "mv default example.com",
+                            tags: ["linux", "ubuntu", "mv", "rename"],
+                        },
+                        {
+                            command: "rm file.txt",
+                            description: "Remove a file.",
+                            example: "rm old.conf",
+                            tags: ["linux", "ubuntu", "rm", "delete"],
+                        },
+                        {
+                            command: "mkdir -p /path/to/folder",
+                            description: "Create a directory and any missing parent directories.",
+                            example: "mkdir -p /var/www/example.com/html",
+                            tags: ["linux", "ubuntu", "mkdir", "directory"],
+                        },
+                    ],
+                },
+                {
+                    title: "Permissions and Ownership",
+                    commands: [
+                        {
+                            command: "chmod 644 file.txt",
+                            description: "Set file permissions to readable by others and writable by owner.",
+                            example: "chmod 644 /etc/nginx/sites-available/example.com",
+                            tags: ["linux", "ubuntu", "chmod", "permissions"],
+                        },
+                        {
+                            command: "chmod +x script.sh",
+                            description: "Make a script executable.",
+                            example: "chmod +x deploy.sh",
+                            tags: ["linux", "ubuntu", "chmod", "execute"],
+                        },
+                        {
+                            command: "chown user:user file.txt",
+                            description: "Change file owner and group.",
+                            example: "sudo chown www-data:www-data /var/www/example.com/html -R",
+                            tags: ["linux", "ubuntu", "chown", "owner"],
+                        },
+                    ],
+                },
+                {
+                    title: "System and Process",
+                    commands: [
+                        {
+                            command: "ps aux | grep nginx",
+                            description: "Find a running process by name.",
+                            example: "ps aux | grep nginx",
+                            tags: ["linux", "ubuntu", "process", "ps"],
+                        },
+                        {
+                            command: "sudo ss -tulpn",
+                            description: "Show listening ports and the processes using them.",
+                            example: "sudo ss -tulpn",
+                            tags: ["linux", "ubuntu", "ports", "network"],
+                        },
+                        {
+                            command: "df -h",
+                            description: "Show disk usage in a human-readable format.",
+                            example: "df -h",
+                            tags: ["linux", "ubuntu", "disk", "storage"],
+                        },
+                        {
+                            command: "free -h",
+                            description: "Show memory usage in a human-readable format.",
+                            example: "free -h",
+                            tags: ["linux", "ubuntu", "memory", "ram"],
                         },
                     ],
                 },
