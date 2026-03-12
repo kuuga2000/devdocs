@@ -273,20 +273,25 @@ button {
 .endpoint-card__body {
     display: grid;
     grid-template-columns: 1.15fr 0.85fr;
-    gap: 18px;
-    margin-top: 18px;
+    gap: 16px;
+    margin-top: 16px;
 }
 
 .block {
-    padding: 16px;
-    border-radius: 18px;
+    padding: 14px 16px;
+    border-radius: 16px;
     background: rgba(255, 255, 255, 0.025);
     border: 1px solid var(--line);
 }
 
 .block h4 {
-    margin: 0 0 12px;
-    font-size: 0.98rem;
+    margin: 0 0 10px;
+    font-size: 1rem;
+}
+
+.block > .block,
+.block > .response-block {
+    margin-top: 18px;
 }
 
 .field-list,
@@ -297,10 +302,11 @@ button {
 
 .field-row {
     display: grid;
-    grid-template-columns: 140px 1fr;
+    grid-template-columns: 112px 1fr;
     gap: 12px;
-    padding: 10px 0;
+    padding: 6px 0;
     border-top: 1px solid rgba(148, 163, 184, 0.08);
+    align-items: start;
 }
 
 .field-row:first-child {
@@ -314,6 +320,7 @@ button {
 
 .field-meta {
     color: var(--muted);
+    line-height: 1.45;
 }
 
 .tags {
@@ -330,6 +337,7 @@ pre {
 }
 
 .code-block {
+    margin-top: 10px;
     padding: 16px;
     border-radius: 16px;
     background: #0a1020;
@@ -339,11 +347,11 @@ pre {
 }
 
 .response-title {
-    margin-bottom: 10px;
+    margin-bottom: 0;
 }
 
 .response-block + .response-block {
-    margin-top: 14px;
+    margin-top: 12px;
 }
 
 .empty-state {
