@@ -4,7 +4,6 @@ const SECRET_APP_DOCS = {
     meta: [
         "Gin framework",
         "Static HTML docs",
-        "Dark-mode only",
         "Based on current handlers",
     ],
     endpoints: [

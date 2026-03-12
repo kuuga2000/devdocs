@@ -91,7 +91,7 @@ button {
     margin: 0;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    font-size: 0.74rem;
+    font-size: 0.68rem;
     color: var(--muted);
 }
 
@@ -102,14 +102,15 @@ button {
 }
 
 .hero h1 {
-    font-size: clamp(2rem, 4vw, 3.7rem);
+    font-size: clamp(1.55rem, 3vw, 2.6rem);
 }
 
 .hero__intro p,
 .overview__card p:last-child,
 .endpoint-card__description {
     color: var(--muted);
-    line-height: 1.7;
+    line-height: 1.65;
+    font-size: 0.94rem;
 }
 
 .base-url {
@@ -166,12 +167,12 @@ button {
 
 .meta-pill,
 .tag {
-    padding: 8px 12px;
+    padding: 7px 11px;
     border-radius: 999px;
     border: 1px solid var(--line);
     background: rgba(255, 255, 255, 0.03);
     color: var(--muted);
-    font-size: 0.82rem;
+    font-size: 0.75rem;
 }
 
 .search {
@@ -182,17 +183,18 @@ button {
 
 .search span {
     color: var(--muted);
-    font-size: 0.84rem;
+    font-size: 0.76rem;
 }
 
 .search input {
     width: 100%;
-    padding: 14px 16px;
+    padding: 12px 14px;
     border-radius: 16px;
     border: 1px solid var(--line);
     background: #0d1426;
     color: var(--text);
     outline: none;
+    font-size: 0.88rem;
 }
 
 .search input:focus {
@@ -224,18 +226,28 @@ button {
 
 .sidebar__nav {
     display: grid;
-    gap: 10px;
+    gap: 8px;
 }
 
 .sidebar__nav a {
     display: grid;
     gap: 4px;
-    padding: 12px 14px;
+    padding: 10px 12px;
     border-radius: 14px;
     border: 1px solid transparent;
     color: var(--muted);
     text-decoration: none;
     transition: 160ms ease;
+    font-size: 0.84rem;
+}
+
+.sidebar__nav a strong {
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.sidebar__nav a span {
+    font-size: 0.74rem;
 }
 
 .sidebar__nav a:hover,
@@ -312,6 +324,8 @@ button {
     border: 1px solid var(--line);
     overflow-x: auto;
     color: var(--accent);
+    font-size: 0.96rem;
+    line-height: 1.5;
 }
 
 .copy-block {
@@ -367,13 +381,14 @@ button {
     border-radius: 15px;
     background: rgba(255, 255, 255, 0.025);
     border: 1px solid var(--line);
+    margin-bottom: 20px;
 }
 
 .block h4 {
     margin: 0 0 12px;
     padding-bottom: 8px;
     border-bottom: 1px solid rgba(148, 163, 184, 0.14);
-    font-size: 0.98rem;
+    font-size: 0.9rem;
 }
 
 .block > .block,
@@ -391,7 +406,7 @@ button {
     display: grid;
     grid-template-columns: 108px 1fr;
     gap: 10px;
-    padding: 6px 0;
+    padding: 8px 0;
     align-items: start;
 }
 
@@ -402,15 +417,18 @@ button {
 .field-name {
     color: var(--accent);
     font-weight: 600;
+    font-size: 0.9rem;
 }
 
 .field-meta {
     color: var(--muted);
     line-height: 1.4;
+    font-size: 0.9rem;
 }
 
 .field-meta strong {
     color: var(--text);
+    font-size: 0.95rem;
 }
 
 .field-meta div {
@@ -438,6 +456,8 @@ pre {
     border: 1px solid rgba(125, 211, 252, 0.12);
     color: #dbeafe;
     overflow-x: auto;
+    font-size: 0.82rem;
+    line-height: 1.55;
 }
 
 .code-block .tok-key {
@@ -530,19 +550,17 @@ pre {
 }
 
 html[data-theme="light"] {
-    --bg: #f5f8fc;
-    --line: rgba(96, 115, 150, 0.12);
-    --text: #32445f;
-    --muted: #7182a0;
-    --accent: #4f86be;
-    --shadow: 0 10px 24px rgba(80, 96, 122, 0.05);
+    --bg: #f8fafc;
+    --line: rgba(148, 163, 184, 0.18);
+    --text: #0f172a;
+    --muted: #64748b;
+    --accent: #2563eb;
+    --shadow: 0 10px 24px rgba(148, 163, 184, 0.08);
 }
 
 html[data-theme="light"] body {
-    background:
-        radial-gradient(circle at top left, rgba(89, 157, 232, 0.08), transparent 24%),
-        radial-gradient(circle at top right, rgba(110, 188, 160, 0.07), transparent 18%),
-        linear-gradient(180deg, #fbfdff 0%, var(--bg) 100%);
+    background-color: var(--bg);
+    background-image: none;
 }
 
 html[data-theme="light"] .hero,
@@ -550,84 +568,84 @@ html[data-theme="light"] .sidebar__panel,
 html[data-theme="light"] .overview__card,
 html[data-theme="light"] .endpoint-card,
 html[data-theme="light"] .empty-state {
-    background: rgba(255, 255, 255, 0.72);
+    background: rgba(255, 255, 255, 0.88);
 }
 
 html[data-theme="light"] .search input {
-    background: #fafcff;
+    background: #f1f5f9;
 }
 
 html[data-theme="light"] .sidebar__nav a:hover,
 html[data-theme="light"] .sidebar__nav a.is-active {
-    background: rgba(79, 134, 190, 0.06);
-    border-color: rgba(79, 134, 190, 0.12);
+    background: #eff6ff;
+    border-color: rgba(37, 99, 235, 0.12);
 }
 
 html[data-theme="light"] .route {
-    background: #f9fbfe;
+    background: #f8fafc;
 }
 
 html[data-theme="light"] .copy-button {
-    background: rgba(251, 253, 255, 0.94);
-    border-color: rgba(79, 134, 190, 0.14);
-    color: #72829d;
+    background: rgba(255, 255, 255, 0.96);
+    border-color: rgba(148, 163, 184, 0.2);
+    color: #64748b;
 }
 
 html[data-theme="light"] .copy-button:hover {
-    border-color: rgba(79, 134, 190, 0.2);
-    color: #32445f;
+    border-color: rgba(37, 99, 235, 0.24);
+    color: #0f172a;
 }
 
 html[data-theme="light"] .block {
-    background: #fbfcfe;
-    border-color: rgba(96, 115, 150, 0.11);
-    box-shadow: 0 1px 8px rgba(80, 96, 122, 0.035);
+    background: #ffffff;
+    border-color: rgba(148, 163, 184, 0.16);
+    box-shadow: 0 1px 8px rgba(148, 163, 184, 0.06);
 }
 
 html[data-theme="light"] .block h4 {
-    border-bottom-color: rgba(96, 115, 150, 0.1);
+    border-bottom-color: rgba(148, 163, 184, 0.14);
 }
 
 html[data-theme="light"] .field-row + .field-row {
-    border-top: 1px solid rgba(96, 115, 150, 0.08);
+    border-top: 1px solid rgba(148, 163, 184, 0.12);
 }
 
 html[data-theme="light"] .field-name {
-    color: #4b81b8;
+    color: #2563eb;
 }
 
 html[data-theme="light"] .code-block {
-    background: #f7fafe;
-    color: #50627f;
-    border-color: rgba(79, 134, 190, 0.1);
+    background: #f8fafc;
+    color: #334155;
+    border-color: rgba(148, 163, 184, 0.14);
 }
 
 html[data-theme="light"] .code-block .tok-key {
-    color: #4f80af;
+    color: #2563eb;
 }
 
 html[data-theme="light"] .code-block .tok-string {
-    color: #4c8a67;
+    color: #15803d;
 }
 
 html[data-theme="light"] .code-block .tok-number {
-    color: #b07a3e;
+    color: #b45309;
 }
 
 html[data-theme="light"] .code-block .tok-boolean {
-    color: #b96b88;
+    color: #be185d;
 }
 
 html[data-theme="light"] .code-block .tok-null {
-    color: #8a98ad;
+    color: #64748b;
 }
 
 html[data-theme="light"] .meta-pill,
 html[data-theme="light"] .tag {
-    background: rgba(79, 134, 190, 0.045);
+    background: rgba(241, 245, 249, 0.95);
 }
 
 html[data-theme="light"] .theme-toggle {
-    background: rgba(251, 253, 255, 0.92);
-    color: #546781;
+    background: rgba(255, 255, 255, 0.96);
+    color: #64748b;
 }
