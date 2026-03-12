@@ -4,6 +4,9 @@ const searchInput = document.getElementById("searchInput");
 const heroMeta = document.getElementById("heroMeta");
 const emptyState = document.getElementById("emptyState");
 const baseUrlLabel = document.getElementById("baseUrlLabel");
+const baseUrlText = document.getElementById("baseUrlText");
+const themeToggle = document.getElementById("themeToggle");
+const root = document.documentElement;
 
 function escapeHtml(value) {
     return String(value)
@@ -14,8 +17,87 @@ function escapeHtml(value) {
         .replaceAll("'", "&#39;");
 }
 
+function highlightCodeBlock(value) {
+    const escaped = escapeHtml(value);
+    const tokenized = escaped.replace(
+        /(&quot;.*?&quot;)(?=\s*:)|(&quot;.*?&quot;)|\b(true|false|null)\b|\b-?\d+(?:\.\d+)?\b/g,
+        (match, keyToken, stringToken, literalToken) => {
+            if (keyToken) {
+                return `<span class="tok-key">${keyToken}</span>`;
+            }
+            if (stringToken) {
+                return `<span class="tok-string">${stringToken}</span>`;
+            }
+            if (literalToken === "true" || literalToken === "false") {
+                return `<span class="tok-boolean">${literalToken}</span>`;
+            }
+            if (literalToken === "null") {
+                return `<span class="tok-null">${literalToken}</span>`;
+            }
+            return `<span class="tok-number">${match}</span>`;
+        }
+    );
+
+    return tokenized;
+}
+
+function copyText(text, button) {
+    const originalLabel = button.innerHTML;
+    const writeText = navigator.clipboard?.writeText
+        ? navigator.clipboard.writeText(text)
+        : new Promise((resolve, reject) => {
+            const area = document.createElement("textarea");
+            area.value = text;
+            area.setAttribute("readonly", "");
+            area.style.position = "absolute";
+            area.style.left = "-9999px";
+            document.body.appendChild(area);
+            area.select();
+
+            if (document.execCommand("copy")) {
+                document.body.removeChild(area);
+                resolve();
+                return;
+            }
+
+            document.body.removeChild(area);
+            reject(new Error("Copy failed"));
+        });
+
+    writeText.then(() => {
+        button.innerHTML = '<span>Copied</span><i data-lucide="check" class="copy-button__icon"></i>';
+        lucide.createIcons();
+
+        window.setTimeout(() => {
+            button.innerHTML = originalLabel;
+            lucide.createIcons();
+        }, 1600);
+    }).catch(() => {
+        button.innerHTML = '<span>Failed</span><i data-lucide="x" class="copy-button__icon"></i>';
+        lucide.createIcons();
+
+        window.setTimeout(() => {
+            button.innerHTML = originalLabel;
+            lucide.createIcons();
+        }, 1600);
+    });
+}
+
+function renderCopyButton(copyValue, label = "Copy") {
+    return `
+        <button class="copy-button" type="button" data-copy="${escapeHtml(copyValue)}" aria-label="${escapeHtml(label)}">
+            <span>${escapeHtml(label)}</span>
+            <i data-lucide="copy" class="copy-button__icon"></i>
+        </button>
+    `;
+}
+
+function setThemeToggleIcon(iconName) {
+    themeToggle.innerHTML = `<i data-lucide="${iconName}" class="control-icon"></i>`;
+}
+
 function renderMeta() {
-    baseUrlLabel.textContent = `Base URL: ${SECRET_APP_DOCS.baseUrl}`;
+    baseUrlText.textContent = `Base URL: ${SECRET_APP_DOCS.baseUrl}`;
     heroMeta.innerHTML = "";
     SECRET_APP_DOCS.meta.forEach((item) => {
         const el = document.createElement("span");
@@ -75,7 +157,10 @@ function renderRequestBlock(requestBody) {
             ${renderFieldBlock("Fields", requestBody.fields)}
             <div class="response-block">
                 <p class="response-title">Example</p>
-                <pre class="code-block"><code>${escapeHtml(requestBody.example)}</code></pre>
+                <div class="copy-block">
+                    ${renderCopyButton(requestBody.example, "Copy payload")}
+                    <pre class="code-block"><code>${highlightCodeBlock(requestBody.example)}</code></pre>
+                </div>
             </div>
         </div>
     `;
@@ -89,7 +174,10 @@ function renderResponses(responses) {
                 ${responses.map((response) => `
                     <div class="response-block">
                         <p class="response-title">${response.status} ${escapeHtml(response.title)}</p>
-                        <pre class="code-block"><code>${escapeHtml(response.body)}</code></pre>
+                        <div class="copy-block">
+                            ${renderCopyButton(response.body, "Copy payload")}
+                            <pre class="code-block"><code>${highlightCodeBlock(response.body)}</code></pre>
+                        </div>
                     </div>
                 `).join("")}
             </div>
@@ -109,7 +197,10 @@ function renderEndpoint(endpoint) {
             </div>
             <span class="method method--${endpoint.method.toLowerCase()}">${escapeHtml(endpoint.method)}</span>
         </div>
-        <pre class="route"><code>${escapeHtml(endpoint.path)}</code></pre>
+        <div class="copy-block copy-block--route">
+            ${renderCopyButton(endpoint.path, "Copy endpoint")}
+            <pre class="route"><code>${escapeHtml(endpoint.path)}</code></pre>
+        </div>
         <p class="endpoint-card__description">${escapeHtml(endpoint.description)}</p>
         <div class="tags">
             ${endpoint.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}
@@ -126,6 +217,12 @@ function renderEndpoint(endpoint) {
         </div>
     `;
 
+    article.querySelectorAll(".copy-button").forEach((button) => {
+        button.addEventListener("click", () => {
+            copyText(button.dataset.copy || "", button);
+        });
+    });
+
     endpointList.appendChild(article);
 }
 
@@ -133,6 +230,7 @@ function renderEndpoints(endpoints) {
     endpointList.innerHTML = "";
     endpoints.forEach(renderEndpoint);
     emptyState.hidden = endpoints.length > 0;
+    lucide.createIcons();
     setupObserver();
 }
 
@@ -188,9 +286,40 @@ function setupObserver() {
     sections.forEach((section) => observer.observe(section));
 }
 
+function applyTheme(theme) {
+    if (theme === "light") {
+        root.setAttribute("data-theme", "light");
+        setThemeToggleIcon("sun");
+        themeToggle.setAttribute("aria-label", "Light mode active");
+        themeToggle.setAttribute("title", "Light mode active");
+        lucide.createIcons();
+        return;
+    }
+
+    root.removeAttribute("data-theme");
+    setThemeToggleIcon("moon");
+    themeToggle.setAttribute("aria-label", "Dark mode active");
+    themeToggle.setAttribute("title", "Dark mode active");
+    lucide.createIcons();
+}
+
+function initTheme() {
+    const saved = localStorage.getItem("secret-app-theme");
+    applyTheme(saved === "light" ? "light" : "dark");
+}
+
+function toggleTheme() {
+    const isLight = root.getAttribute("data-theme") === "light";
+    const next = isLight ? "dark" : "light";
+    localStorage.setItem("secret-app-theme", next);
+    applyTheme(next);
+}
+
 searchInput.addEventListener("input", (event) => {
     filterEndpoints(event.target.value);
 });
+
+themeToggle.addEventListener("click", toggleTheme);
 
 window.addEventListener("hashchange", () => {
     const currentHash = window.location.hash;
@@ -202,3 +331,5 @@ window.addEventListener("hashchange", () => {
 renderMeta();
 renderNav(SECRET_APP_DOCS.endpoints);
 renderEndpoints(SECRET_APP_DOCS.endpoints);
+initTheme();
+lucide.createIcons();

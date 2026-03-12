@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="./styles.css">
 </head>
 
@@ -20,7 +21,15 @@
                     <p class="eyebrow">Secret Shop</p>
                     <h1>REST API Documentation</h1>
                 </div>
-                <code class="base-url" id="baseUrlLabel">Base URL: /api/v1</code>
+                <div class="hero__actions">
+                    <code class="base-url" id="baseUrlLabel">
+                        <span id="baseUrlText">Base URL: /api/v1</span>
+                        <i data-lucide="link" class="control-icon"></i>
+                    </code>
+                    <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to light mode" title="Switch to light mode">
+                        <i id="themeIcon" data-lucide="sun" class="control-icon"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="hero__body">
