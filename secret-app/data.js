@@ -6,6 +6,55 @@ const SECRET_APP_DOCS = {
         "Static HTML docs",
         "Based on current handlers",
     ],
+    learning: {
+        endpointBasics: [
+            {
+                title: "What is an endpoint?",
+                text: "An endpoint is one API address plus one HTTP method. Example: GET /api/v1/products means 'ask the server for product data'.",
+            },
+            {
+                title: "Method meaning",
+                text: "GET reads data, POST creates data, and PATCH updates existing data. The method changes what the same path is allowed to do.",
+            },
+            {
+                title: "Path params and query params",
+                text: "Path params are part of the URL like /products/:id. Query params come after ? like ?limit=20&offset=0.",
+            },
+            {
+                title: "Request and response",
+                text: "The client sends a request body for create or update actions. The server validates it, runs business logic, then sends JSON back.",
+            },
+        ],
+        codeFlow: [
+            {
+                title: "main.go",
+                text: "Starts the Gin server, connects PostgreSQL, adds middleware, and registers all route groups.",
+            },
+            {
+                title: "Handler layer",
+                text: "Reads params or JSON, validates input, decides HTTP status code, and shapes the JSON response.",
+            },
+            {
+                title: "Service layer",
+                text: "Contains business rules such as login checks, password validation, and product lookup behavior.",
+            },
+            {
+                title: "Repository layer",
+                text: "Talks to PostgreSQL and returns data models back to the service layer.",
+            },
+            {
+                title: "JSON response",
+                text: "After the handler gets the result, it sends c.JSON(...) back to the frontend or API client.",
+            },
+        ],
+        routeMapping: [
+            "GET / and GET /healthz are defined directly in cmd/api/main.go.",
+            "POST /api/v1/auth/register and POST /api/v1/auth/login come from internal/handler/auth_handler.go.",
+            "GET /api/v1/products and GET /api/v1/products/:id come from internal/handler/product_handler.go.",
+            "GET /api/v1/variants/:sku comes from internal/handler/variant_handler.go.",
+            "Protected profile routes like GET /api/v1/me use auth middleware before entering the handler.",
+        ],
+    },
     endpoints: [
         {
             id: "root",

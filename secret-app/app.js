@@ -3,6 +3,8 @@ const endpointList = document.getElementById("endpointList");
 const searchInput = document.getElementById("searchInput");
 const heroMeta = document.getElementById("heroMeta");
 const emptyState = document.getElementById("emptyState");
+const guideSection = document.getElementById("guideSection");
+const codeMapSection = document.getElementById("codeMapSection");
 const baseUrlLabel = document.getElementById("baseUrlLabel");
 const baseUrlText = document.getElementById("baseUrlText");
 const themeToggle = document.getElementById("themeToggle");
@@ -119,6 +121,49 @@ function renderNav(endpoints) {
         `;
         nav.appendChild(link);
     });
+}
+
+function renderLearning() {
+    const basics = SECRET_APP_DOCS.learning.endpointBasics.map((item) => `
+        <article class="guide-card">
+            <h3>${escapeHtml(item.title)}</h3>
+            <p>${escapeHtml(item.text)}</p>
+        </article>
+    `).join("");
+
+    guideSection.innerHTML = `
+        <div class="overview__card">
+            <p class="eyebrow">Learn REST API</p>
+            <h2>How to read these endpoints</h2>
+            <div class="guide-grid">${basics}</div>
+        </div>
+    `;
+
+    const flow = SECRET_APP_DOCS.learning.codeFlow.map((item, index) => `
+        <div class="flow-step">
+            <span class="flow-step__index">${index + 1}</span>
+            <div>
+                <h3>${escapeHtml(item.title)}</h3>
+                <p>${escapeHtml(item.text)}</p>
+            </div>
+        </div>
+    `).join("");
+
+    const mapping = SECRET_APP_DOCS.learning.routeMapping.map((item) => `
+        <li>${escapeHtml(item)}</li>
+    `).join("");
+
+    codeMapSection.innerHTML = `
+        <div class="overview__card">
+            <p class="eyebrow">Go Code Flow</p>
+            <h2>How this project handles a request</h2>
+            <div class="flow-list">${flow}</div>
+            <div class="mapping-panel">
+                <p class="response-title">Route mapping in this project</p>
+                <ul class="sidebar__notes mapping-list">${mapping}</ul>
+            </div>
+        </div>
+    `;
 }
 
 function renderFieldBlock(title, fields) {
@@ -329,6 +374,7 @@ window.addEventListener("hashchange", () => {
 });
 
 renderMeta();
+renderLearning();
 renderNav(SECRET_APP_DOCS.endpoints);
 renderEndpoints(SECRET_APP_DOCS.endpoints);
 initTheme();
