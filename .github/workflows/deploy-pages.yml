@@ -31,10 +31,34 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24.13.0
+          cache: npm
+          cache-dependency-path: labdocs/package-lock.json
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.156.0'
+          extended: true
+
+      - name: Install dependencies
+        working-directory: ./labdocs
+        run: npm ci
+
+      - name: Build site
+        working-directory: ./labdocs
+        env:
+          HUGO_ENVIRONMENT: production
+          NODE_ENV: production
+        run: npm run build
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./
+          path: ./labdocs/public
 
       - name: Deploy to GitHub Pages
         id: deployment
