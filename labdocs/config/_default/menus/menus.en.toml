@@ -69,11 +69,6 @@
   pageRef = "/docs/labs"
   weight = 10
 
-[[sidebar_docs]]
-  name = "Secret App"
-  pageRef = "/docs/labs/secret-app"
-  weight = 20
-
 [[footer]]
   name = "Privacy Policy"
   url = "/privacy/"

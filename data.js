@@ -133,7 +133,7 @@ const DEV_DOCS = {
             id: "github",
             title: "GitHub",
             summary: "Common GitHub CLI commands for authentication, repositories, and pull requests.",
-            icon: "github",
+            icon: "folder-git-2",
             iconColor: "text-slate-700",
             groups: [
                 {
