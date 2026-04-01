@@ -55,10 +55,21 @@ jobs:
           NODE_ENV: production
         run: npm run build
 
+      - name: Assemble publish directory
+        run: |
+          mkdir -p ./_site
+          cp ./index.html ./_site/index.html
+          cp ./app.js ./_site/app.js
+          cp ./data.js ./_site/data.js
+          cp ./nginx.html ./_site/nginx.html
+          cp -R ./secret-app ./_site/secret-app
+          mkdir -p ./_site/labdocs
+          cp -R ./labdocs/public/. ./_site/labdocs/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./labdocs/public
+          path: ./_site
 
       - name: Deploy to GitHub Pages
         id: deployment
